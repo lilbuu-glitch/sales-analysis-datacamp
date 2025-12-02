@@ -28,12 +28,6 @@ sales-analysis-datacamp/
 ├── README.md                        # Project documentation
 ├── LICENSE                          # MIT License
 ├── .gitignore                       # Ignore unnecessary files
-│
-├── data/                            # Raw & cleaned datasets (optional)
-│   ├── raw/                         
-│   └── processed/
-│
-├── scripts/                         # Reusable Python scripts (optional)
 │   └── utils.py
 │
 └── outputs/                         # Generated assets
