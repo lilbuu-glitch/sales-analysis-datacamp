@@ -28,28 +28,45 @@ The **Email + Call** hybrid method is the strongest performer across all major b
 
 ---
 
-## 🔍 Insights & Visuals
+### 📊 Insights & Visuals
 
-### **1. Revenue Distribution**
+1. Revenue Distribution
 
 Revenue shows a **bimodal distribution**, indicating two customer value segments. This supports targeted marketing and differentiated pricing strategies.
-1. Revenue Distribution
 
 ![Revenue Distribution Plot](image/viz1_revenue_distribution.png)
 
-### **2. Customer Volume**
+---
 
-Email is the largest channel (48%), followed by Call (32%). Email + Call has lower volume but dramatically higher value.
+2. Customer Volume
 
-### **3. Profitability (Boxplot)**
+**Email** is the largest channel (**48%**), followed by **Call** (**32%**). The Email + Call method has lower volume but dramatically higher value.
+
+![Customer Volume Distribution](image/viz2_customer_distribution.png)
+
+---
+
+3. Profitability (Boxplot)
 
 Median revenue is **4× higher** in Email + Call vs Call-only. Differences are statistically significant using non-overlapping IQRs.
 
-### **4. Scalability (Regression)**
+![Profitability Boxplot](image/viz3_revenue_by_method.png)
 
-Email + Call has the steepest slope and highest R², proving excellent scalability as volume increases.
+---
 
-### **5. Growth Trend (Time Series)**
+4. Scalability (Regression)
+
+Email + Call has the **steepest slope** and **highest R²** (**R² = 0.89**), proving excellent scalability as volume increases.
+
+![Scalability Regression Plot](image/viz4_volume_revenue_correlation.png)
+
+---
+
+5. Growth Trend (Time Series)
+
+All channels show growth over 6 weeks, but the Email + Call method **accelerates the fastest** in revenue generation.
+
+![Revenue Growth Trend Time Series](image/viz5_revenue_trend.png)
 
 All channels grow over 6 weeks, but Email + Call accelerates the fastest.
 
