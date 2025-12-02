@@ -2,6 +2,7 @@
 
 End-to-end analysis of sales performance using Python.
 This project demonstrates practical data analytics skills, including data cleaning, exploratory data analysis (EDA), visualization, and business insights for decision-making.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/13Swp3OZGn38dj07l5XtNGMBeVYbgP_Gl#scrollTo=HOcOYa1oeyjI)
 
 ---
 
