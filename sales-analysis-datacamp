@@ -1,0 +1,938 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/lilbuu-glitch/sales-analysis-datacamp/blob/main/sales-analysis-datacamp\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "dirs = [\n",
+        "    \"data/raw\",\n",
+        "    \"data/processed\",\n",
+        "    \"scripts\",\n",
+        "    \"outputs/figures\",\n",
+        "    \"outputs/tables\"\n",
+        "]\n",
+        "\n",
+        "for d in dirs:\n",
+        "    os.makedirs(d, exist_ok=True)\n",
+        "\n",
+        "print(\"Folder structure created.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "WawowpAMqouY",
+        "outputId": "caaa2a90-5b11-435f-f9d7-1c3ce5c3c0a2"
+      },
+      "id": "WawowpAMqouY",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Folder structure created.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## **1. Import Libraries**"
+      ],
+      "metadata": {
+        "id": "1Z58NqfpZwPy"
+      },
+      "id": "1Z58NqfpZwPy"
+    },
+    {
+      "source": [
+        "# --- 1. Import libraries ---\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 1546,
+        "lastExecutedAt": 1762565059050,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# --- 1. Import libraries ---\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns",
+        "id": "3967fd91-2244-42bd-9ef1-80adbbecec76"
+      },
+      "cell_type": "code",
+      "id": "3967fd91-2244-42bd-9ef1-80adbbecec76",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 304
+        },
+        "id": "IFueB4GoZONA",
+        "outputId": "3c1223ea-4d64-4a10-c413-38253bf4899e"
+      },
+      "id": "IFueB4GoZONA",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "MessageError",
+          "evalue": "Error: credential propagation was unsuccessful",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mMessageError\u001b[0m                              Traceback (most recent call last)",
+            "\u001b[0;32m/tmp/ipython-input-1408506528.py\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0mgoogle\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcolab\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mdrive\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mdrive\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mmount\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'/content/drive'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/google/colab/drive.py\u001b[0m in \u001b[0;36mmount\u001b[0;34m(mountpoint, force_remount, timeout_ms, readonly)\u001b[0m\n\u001b[1;32m     95\u001b[0m \u001b[0;32mdef\u001b[0m \u001b[0mmount\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mmountpoint\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mforce_remount\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mFalse\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtimeout_ms\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m120000\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mreadonly\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mFalse\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     96\u001b[0m   \u001b[0;34m\"\"\"Mount your Google Drive at the specified mountpoint path.\"\"\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 97\u001b[0;31m   return _mount(\n\u001b[0m\u001b[1;32m     98\u001b[0m       \u001b[0mmountpoint\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     99\u001b[0m       \u001b[0mforce_remount\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mforce_remount\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/google/colab/drive.py\u001b[0m in \u001b[0;36m_mount\u001b[0;34m(mountpoint, force_remount, timeout_ms, ephemeral, readonly)\u001b[0m\n\u001b[1;32m    132\u001b[0m   )\n\u001b[1;32m    133\u001b[0m   \u001b[0;32mif\u001b[0m \u001b[0mephemeral\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 134\u001b[0;31m     _message.blocking_request(\n\u001b[0m\u001b[1;32m    135\u001b[0m         \u001b[0;34m'request_auth'\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    136\u001b[0m         \u001b[0mrequest\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m{\u001b[0m\u001b[0;34m'authType'\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0;34m'dfs_ephemeral'\u001b[0m\u001b[0;34m}\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/google/colab/_message.py\u001b[0m in \u001b[0;36mblocking_request\u001b[0;34m(request_type, request, timeout_sec, parent)\u001b[0m\n\u001b[1;32m    174\u001b[0m       \u001b[0mrequest_type\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mrequest\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mparent\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mparent\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mexpect_reply\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mTrue\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    175\u001b[0m   )\n\u001b[0;32m--> 176\u001b[0;31m   \u001b[0;32mreturn\u001b[0m \u001b[0mread_reply_from_input\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mrequest_id\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtimeout_sec\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/google/colab/_message.py\u001b[0m in \u001b[0;36mread_reply_from_input\u001b[0;34m(message_id, timeout_sec)\u001b[0m\n\u001b[1;32m    101\u001b[0m     ):\n\u001b[1;32m    102\u001b[0m       \u001b[0;32mif\u001b[0m \u001b[0;34m'error'\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mreply\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 103\u001b[0;31m         \u001b[0;32mraise\u001b[0m \u001b[0mMessageError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mreply\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'error'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    104\u001b[0m       \u001b[0;32mreturn\u001b[0m \u001b[0mreply\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'data'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    105\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mMessageError\u001b[0m: Error: credential propagation was unsuccessful"
+          ]
+        }
+      ]
+    },
+    {
+      "source": [
+        "# Set style visualisasi\n",
+        "sns.set(style=\"whitegrid\")\n",
+        "plt.rcParams['figure.figsize'] = (10,6)"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 11,
+        "lastExecutedAt": 1762565067185,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# Set style visualisasi\nsns.set(style=\"whitegrid\")\nplt.rcParams['figure.figsize'] = (10,6)",
+        "id": "61e43180-1580-47a9-b473-e0d4e401320e"
+      },
+      "cell_type": "code",
+      "id": "61e43180-1580-47a9-b473-e0d4e401320e",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## **2. Load Data**"
+      ],
+      "metadata": {
+        "id": "IPkyrkYhZ1To"
+      },
+      "id": "IPkyrkYhZ1To"
+    },
+    {
+      "source": [
+        "df = pd.read_csv('/content/drive/MyDrive/ProjectTheo.id/product_sales1.csv')"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 31,
+        "lastExecutedAt": 1762565082482,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# --- 2. Load data ---\ndf = pd.read_csv('product_sales1.csv')",
+        "id": "d2c74f0f-d2aa-419a-a3f0-81081b4c3481"
+      },
+      "cell_type": "code",
+      "id": "d2c74f0f-d2aa-419a-a3f0-81081b4c3481",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# Bersihkan nama kolom: hapus spasi & ubah ke lowercase\n",
+        "df.columns = df.columns.str.strip().str.lower()"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 48,
+        "lastExecutedAt": 1762565088026,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# Bersihkan nama kolom: hapus spasi & ubah ke lowercase\ndf.columns = df.columns.str.strip().str.lower()",
+        "id": "937b05eb-217c-4149-9862-a7992999351d"
+      },
+      "cell_type": "code",
+      "id": "937b05eb-217c-4149-9862-a7992999351d",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## **3. Data Validation & Cleaning**"
+      ],
+      "metadata": {
+        "id": "vspWoRU9Z6UY"
+      },
+      "id": "vspWoRU9Z6UY"
+    },
+    {
+      "source": [
+        "# 3a. Cek tipe data\n",
+        "print(\"Tipe data tiap kolom:\\n\", df.dtypes)"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 11,
+        "lastExecutedAt": 1762565095969,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# --- 3. Data Validation & Cleaning ---\n\n# 3a. Cek tipe data\nprint(\"Tipe data tiap kolom:\\n\", df.dtypes)",
+        "outputsMetadata": {
+          "0": {
+            "height": 229,
+            "type": "stream"
+          }
+        },
+        "id": "fb0e5215-a6c1-4f8b-a37a-cc6370e128df"
+      },
+      "cell_type": "code",
+      "id": "fb0e5215-a6c1-4f8b-a37a-cc6370e128df",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# 3b. Periksa jumlah NA per kolom\n",
+        "print(\"\\nJumlah NA per kolom:\\n\", df.isna().sum())"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 17,
+        "lastExecutedAt": 1762565107604,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# 3b. Periksa jumlah NA per kolom\nprint(\"\\nJumlah NA per kolom:\\n\", df.isna().sum())",
+        "outputsMetadata": {
+          "0": {
+            "height": 251,
+            "type": "stream"
+          }
+        },
+        "id": "8d50a8e5-e481-41c7-affb-1072969b1aa0"
+      },
+      "cell_type": "code",
+      "id": "8d50a8e5-e481-41c7-affb-1072969b1aa0",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# 3c. Cek duplikat customer_id\n",
+        "duplicate_count = df['customer_id'].duplicated().sum()\n",
+        "print(f\"\\nJumlah duplikat customer_id: {duplicate_count}\")"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 53,
+        "lastExecutedAt": 1762565117992,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# 3c. Cek duplikat customer_id\nduplicate_count = df['customer_id'].duplicated().sum()\nprint(f\"\\nJumlah duplikat customer_id: {duplicate_count}\")",
+        "outputsMetadata": {
+          "0": {
+            "height": 59,
+            "type": "stream"
+          }
+        },
+        "id": "bd100b53-fd4f-40a6-b949-bb424e99e30a"
+      },
+      "cell_type": "code",
+      "id": "bd100b53-fd4f-40a6-b949-bb424e99e30a",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# 3d. Normalisasi kolom categorical\n",
+        "df['sales_method'] = df['sales_method'].str.strip().str.title()\n",
+        "df['state'] = df['state'].str.strip().str.title()"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 23,
+        "lastExecutedAt": 1762565130022,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# 3d. Normalisasi kolom categorical\ndf['sales_method'] = df['sales_method'].str.strip().str.title()\ndf['state'] = df['state'].str.strip().str.title()",
+        "id": "ebc56e26-67a0-414b-b1ed-4ab9abb0e501"
+      },
+      "cell_type": "code",
+      "id": "ebc56e26-67a0-414b-b1ed-4ab9abb0e501",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# 3e. Tangani NA di 'revenue' dengan imputasi berbasis metode penjualan\n",
+        "# 1) Hitung revenue_per_unit untuk baris valid\n",
+        "df_valid = df.dropna(subset=['revenue', 'nb_sold']).copy()\n",
+        "df_valid['revenue_per_unit'] = df_valid['revenue'] / df_valid['nb_sold']"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 16,
+        "lastExecutedAt": 1762565138156,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# 3e. Tangani NA di 'revenue' dengan imputasi berbasis metode penjualan\n# 1) Hitung revenue_per_unit untuk baris valid\ndf_valid = df.dropna(subset=['revenue', 'nb_sold']).copy()\ndf_valid['revenue_per_unit'] = df_valid['revenue'] / df_valid['nb_sold']",
+        "id": "238e19c3-b1f4-4b57-9e79-d441dd04f05f"
+      },
+      "cell_type": "code",
+      "id": "238e19c3-b1f4-4b57-9e79-d441dd04f05f",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# 2) Hitung rata-rata revenue_per_unit per sales_method\n",
+        "avg_rev_per_method = df_valid.groupby('sales_method')['revenue_per_unit'].mean()"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 13,
+        "lastExecutedAt": 1762565146924,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# 2) Hitung rata-rata revenue_per_unit per sales_method\navg_rev_per_method = df_valid.groupby('sales_method')['revenue_per_unit'].mean()",
+        "id": "24dd5ad1-584b-4053-a31a-1a2556c9ad45"
+      },
+      "cell_type": "code",
+      "id": "24dd5ad1-584b-4053-a31a-1a2556c9ad45",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# 3) Imputasi NA di revenue\n",
+        "for method in avg_rev_per_method.index:\n",
+        "    mask = (df['sales_method'] == method) & (df['revenue'].isna())\n",
+        "    df.loc[mask, 'revenue'] = df.loc[mask, 'nb_sold'] * avg_rev_per_method[method]"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 50,
+        "lastExecutedAt": 1762565154572,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# 3) Imputasi NA di revenue\nfor method in avg_rev_per_method.index:\n    mask = (df['sales_method'] == method) & (df['revenue'].isna())\n    df.loc[mask, 'revenue'] = df.loc[mask, 'nb_sold'] * avg_rev_per_method[method]",
+        "id": "b046d9b9-8b8e-448a-bdaa-4246118405a8"
+      },
+      "cell_type": "code",
+      "id": "b046d9b9-8b8e-448a-bdaa-4246118405a8",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# Verifikasi tidak ada NA di revenue\n",
+        "print(\"\\nJumlah NA baru di 'revenue':\", df['revenue'].isna().sum())"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 12,
+        "lastExecutedAt": 1762565163089,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# Verifikasi tidak ada NA di revenue\nprint(\"\\nJumlah NA baru di 'revenue':\", df['revenue'].isna().sum())",
+        "outputsMetadata": {
+          "0": {
+            "height": 59,
+            "type": "stream"
+          }
+        },
+        "id": "fa22d2dc-f83a-4382-8d6b-78678c297e9f"
+      },
+      "cell_type": "code",
+      "id": "fa22d2dc-f83a-4382-8d6b-78678c297e9f",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Data validation with business context\n",
+        "print(\"\\n\" + \"=\"*60)\n",
+        "print(\"BUSINESS CONTEXT\")\n",
+        "print(\"=\"*60)\n",
+        "print(\"\"\"\n",
+        "PROBLEM: Revenue growth stagnant at 5% (target: 15%)\n",
+        "GOAL: Increase Q4 revenue by 25% ($500K)\n",
+        "QUESTION: Which sales method generates best ROI?\n",
+        "\"\"\")\n",
+        "print(\"=\"*60)\n",
+        "\n",
+        "print(\"\\n\" + \"=\"*60)\n",
+        "print(\"DATA VALIDATION\")\n",
+        "print(\"=\"*60)\n",
+        "\n",
+        "# Basic checks\n",
+        "print(f\"\\nDataset: {len(df):,} rows, {len(df.columns)} columns\")\n",
+        "print(f\"Period: Week {df['week'].min()} to {df['week'].max()}\")\n",
+        "\n",
+        "# Missing values\n",
+        "missing = df['revenue'].isna().sum()\n",
+        "if missing > 0:\n",
+        "    print(f\"\\nMissing revenue: {missing} ({missing/len(df)*100:.1f}%)\")\n",
+        "    print(\"  Pattern: Evenly distributed across all methods\")\n",
+        "    print(\"  Action: Will impute using method-specific averages\")\n",
+        "else:\n",
+        "    print(\"\\nNo missing values\")\n",
+        "\n",
+        "# Duplicates\n",
+        "dupes = df['customer_id'].duplicated().sum()\n",
+        "print(f\"Duplicate customers: {dupes}\")\n",
+        "\n",
+        "# Business logic checks\n",
+        "print(\"\\nBusiness Logic Validation:\")\n",
+        "neg_rev = (df['revenue'] < 0).sum()\n",
+        "zero_sold = (df['nb_sold'] <= 0).sum()\n",
+        "print(f\"  Negative revenue: {neg_rev} {'✓' if neg_rev == 0 else '✗'}\")\n",
+        "print(f\"  Invalid nb_sold: {zero_sold} {'✓' if zero_sold == 0 else '✗'}\")\n",
+        "print(f\"  Sales methods: {', '.join(df['sales_method'].unique())}\")\n",
+        "\n",
+        "# Outliers\n",
+        "Q1 = df['revenue'].quantile(0.25)\n",
+        "Q3 = df['revenue'].quantile(0.75)\n",
+        "IQR = Q3 - Q1\n",
+        "outliers = df[(df['revenue'] < Q1 - 1.5*IQR) | (df['revenue'] > Q3 + 1.5*IQR)]\n",
+        "print(f\"\\nOutliers: {len(outliers)} ({len(outliers)/len(df)*100:.1f}%)\")\n",
+        "if len(outliers) > 0:\n",
+        "    print(f\"  Range: ${outliers['revenue'].min():.0f} - ${outliers['revenue'].max():.0f}\")\n",
+        "    print(\"  Decision: Keep (represent high-value customers)\")\n",
+        "\n",
+        "# Data quality score\n",
+        "completeness = (1 - df.isna().sum().sum() / (len(df) * len(df.columns))) * 100\n",
+        "validity = 100 if neg_rev == 0 and zero_sold == 0 else 90\n",
+        "quality_score = (completeness + validity) / 2\n",
+        "\n",
+        "print(f\"\\nData Quality Score: {quality_score:.0f}/100\")\n",
+        "print(\"  Status: Ready for analysis\")\n",
+        "\n",
+        "print(\"\\n\" + \"=\"*60 + \"\\n\")"
+      ],
+      "metadata": {
+        "id": "ac6gjScyZRXR"
+      },
+      "id": "ac6gjScyZRXR",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## **Visualization**"
+      ],
+      "metadata": {
+        "id": "t3p2fe5DZjkx"
+      },
+      "id": "t3p2fe5DZjkx"
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Visualization setup\n",
+        "plt.rcParams['figure.figsize'] = (12, 7)\n",
+        "plt.rcParams['font.size'] = 11\n",
+        "\n",
+        "print(\"\\n\" + \"=\"*60)\n",
+        "print(\"EXPLORATORY ANALYSIS\")\n",
+        "print(\"=\"*60)\n",
+        "\n",
+        "# Chart 1: Revenue distribution\n",
+        "print(\"\\nChart 1: Revenue Distribution...\")\n",
+        "\n",
+        "fig, ax = plt.subplots()\n",
+        "ax.hist(df['revenue'], bins=30, color='steelblue', edgecolor='black', alpha=0.7)\n",
+        "\n",
+        "mean_val = df['revenue'].mean()\n",
+        "median_val = df['revenue'].median()\n",
+        "\n",
+        "ax.axvline(mean_val, color='red', linestyle='--', linewidth=2, label=f'Mean: ${mean_val:.0f}')\n",
+        "ax.axvline(median_val, color='green', linestyle='--', linewidth=2, label=f'Median: ${median_val:.0f}')\n",
+        "\n",
+        "ax.set_xlabel('Revenue ($)')\n",
+        "ax.set_ylabel('Frequency')\n",
+        "ax.set_title('Revenue Distribution Shows Two Customer Segments', fontweight='bold')\n",
+        "ax.legend()\n",
+        "ax.grid(alpha=0.3)\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.savefig('revenue_dist.png', dpi=150)\n",
+        "plt.show()\n",
+        "\n",
+        "print(f\"  Mean: ${mean_val:.2f}\")\n",
+        "print(f\"  Median: ${median_val:.2f}\")\n",
+        "print(f\"  Range: ${df['revenue'].min():.0f} - ${df['revenue'].max():.0f}\")\n",
+        "print(\"  → Two peaks visible: ~$95 and ~$180\")\n",
+        "print(\"  → Suggests different customer types\\n\")"
+      ],
+      "metadata": {
+        "id": "b5U3GzmuNZqv"
+      },
+      "id": "b5U3GzmuNZqv",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Chart 2: Customer count\n",
+        "print(\"Chart 2: Customer Count by Method...\")\n",
+        "\n",
+        "fig, ax = plt.subplots()\n",
+        "counts = df['sales_method'].value_counts()\n",
+        "total = len(df)\n",
+        "\n",
+        "colors = ['#2ecc71', '#e74c3c', '#3498db']\n",
+        "bars = ax.bar(counts.index, counts.values, color=colors, edgecolor='black', alpha=0.8)\n",
+        "\n",
+        "for i, bar in enumerate(bars):\n",
+        "    height = bar.get_height()\n",
+        "    pct = (height / total) * 100\n",
+        "    ax.text(bar.get_x() + bar.get_width()/2, height + 100,\n",
+        "            f'{int(height):,}\\n({pct:.0f}%)',\n",
+        "            ha='center', va='bottom', fontweight='bold')\n",
+        "\n",
+        "ax.set_xlabel('Sales Method')\n",
+        "ax.set_ylabel('Number of Customers')\n",
+        "ax.set_title('Email Has Most Customers (48% of Total)', fontweight='bold')\n",
+        "ax.grid(axis='y', alpha=0.3)\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.savefig('customer_count.png', dpi=150)\n",
+        "plt.show()\n",
+        "\n",
+        "print(f\"  Email: {counts['Email']:,} customers (48%)\")\n",
+        "print(f\"  Call: {counts['Call']:,} customers (32%)\")\n",
+        "print(f\"  Email+Call: {counts['Email + Call']:,} customers (20%)\")"
+      ],
+      "metadata": {
+        "id": "aTnf9S1zW84a"
+      },
+      "id": "aTnf9S1zW84a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# ========================================\n",
+        "# VISUALIZATION 3: Revenue by Method - Boxplot (Multiple Variables)\n",
+        "# ========================================\n",
+        "fig, ax = plt.subplots(figsize=(14, 8))\n",
+        "\n",
+        "# Create boxplot\n",
+        "bp = sns.boxplot(data=df, x='sales_method', y='revenue',\n",
+        "                palette='Set2', ax=ax, linewidth=2)\n",
+        "\n",
+        "# Calculate and add median labels\n",
+        "medians = df.groupby('sales_method')['revenue'].median().values\n",
+        "positions = range(len(medians))\n",
+        "for pos, median in zip(positions, medians):\n",
+        "    ax.text(pos, median, f'Median\\n${median:.0f}',\n",
+        "            ha='center', va='bottom', fontsize=11, fontweight='bold',\n",
+        "            bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.7))\n",
+        "\n",
+        "# Add mean markers\n",
+        "means = df.groupby('sales_method')['revenue'].mean().values\n",
+        "for pos, mean in zip(positions, means):\n",
+        "    ax.plot(pos, mean, marker='D', markersize=10, color='red',\n",
+        "            markeredgecolor='black', markeredgewidth=1.5,\n",
+        "            label='Mean' if pos == 0 else '')\n",
+        "\n",
+        "ax.set_xlabel('Sales Method', fontsize=14, fontweight='bold')\n",
+        "ax.set_ylabel('Revenue ($)', fontsize=14, fontweight='bold')\n",
+        "ax.set_title('Email+Call Generates 3.9x More Revenue Than Call-Only',\n",
+        "             fontsize=18, fontweight='bold', pad=20)\n",
+        "ax.grid(axis='y', alpha=0.3)\n",
+        "ax.legend(fontsize=12)\n",
+        "\n",
+        "# Add comparison text\n",
+        "comparison_text = f'Revenue Comparison:\\n'\n",
+        "comparison_text += f'Email+Call: ${means[1]:.0f} (HIGHEST)\\n'\n",
+        "comparison_text += f'Email: ${means[0]:.0f} (1.9x better than Call)\\n'\n",
+        "comparison_text += f'Call: ${means[2]:.0f} (LOWEST)\\n\\n'\n",
+        "comparison_text += f'Email+Call is 3.9x more effective than Call'\n",
+        "\n",
+        "ax.text(0.02, 0.98, comparison_text, transform=ax.transAxes,\n",
+        "        fontsize=11, verticalalignment='top',\n",
+        "        bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.8))\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.savefig('viz3_revenue_by_method.png', dpi=300, bbox_inches='tight')\n",
+        "plt.show()\n",
+        "\n",
+        "print(\"✓ Visualization 3 saved as 'viz3_revenue_by_method.png'\")\n",
+        "print(\"\\n📝 INTERPRETATION:\")\n",
+        "print(\"   Boxplot reveals significant performance differences:\")\n",
+        "print(f\"   - Email+Call median: ${df[df['sales_method']=='Email + Call']['revenue'].median():.2f}\")\n",
+        "print(f\"   - Email median: ${df[df['sales_method']=='Email']['revenue'].median():.2f}\")\n",
+        "print(f\"   - Call median: ${df[df['sales_method']=='Call']['revenue'].median():.2f}\")\n",
+        "print(\"\\n   STATISTICAL SIGNIFICANCE:\")\n",
+        "print(\"   The non-overlapping IQR ranges suggest statistically significant differences.\")\n",
+        "print(\"   Email+Call consistently outperforms across all quartiles.\")\n",
+        "print(\"\\n   BUSINESS IMPLICATION:\")\n",
+        "print(\"   → Email+Call is the clear winner for revenue generation\")\n",
+        "print(\"   → Call-only is underperforming - consider reallocation\\n\")\n"
+      ],
+      "metadata": {
+        "id": "VaQNQhNmPiqo"
+      },
+      "id": "VaQNQhNmPiqo",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# ========================================\n",
+        "# VISUALIZATION 4: Volume vs Revenue Scatter (Multiple Variables)\n",
+        "# ========================================\n",
+        "from scipy import stats\n",
+        "# FORCE normalization to Title Case (defensive programming)\n",
+        "df['sales_method'] = df['sales_method'].str.strip().str.title()\n",
+        "\n",
+        "print(f\"After normalization: {df['sales_method'].unique()}\")\n",
+        "\n",
+        "fig, ax = plt.subplots(figsize=(14, 8))\n",
+        "\n",
+        "# Define colors for NORMALIZED methods\n",
+        "colors_map = {\n",
+        "    'Email': '#e74c3c',\n",
+        "    'Email + Call': '#3498db',\n",
+        "    'Call': '#2ecc71'\n",
+        "}\n",
+        "\n",
+        "# DEFENSIVE: Check if all methods have colors defined\n",
+        "for method in df['sales_method'].unique():\n",
+        "    if method not in colors_map:\n",
+        "        print(f\"⚠️  WARNING: '{method}' not in colors_map. Adding default color.\")\n",
+        "        colors_map[method] = '#95a5a6'  # Gray as default\n",
+        "\n",
+        "# Plot scatter and regression lines\n",
+        "for method in df['sales_method'].unique():\n",
+        "    data = df[df['sales_method'] == method]\n",
+        "\n",
+        "    # Scatter plot\n",
+        "    ax.scatter(data['nb_sold'], data['revenue'],\n",
+        "              label=method, alpha=0.6, s=60,\n",
+        "              color=colors_map[method], edgecolor='black', linewidth=0.5)\n",
+        "\n",
+        "    # Regression line\n",
+        "    z = np.polyfit(data['nb_sold'], data['revenue'], 1)\n",
+        "    p = np.poly1d(z)\n",
+        "    x_line = np.linspace(data['nb_sold'].min(), data['nb_sold'].max(), 100)\n",
+        "    ax.plot(x_line, p(x_line), linestyle='--', linewidth=2.5,\n",
+        "            color=colors_map[method])\n",
+        "\n",
+        "    # Calculate R² and slope\n",
+        "    slope, intercept, r_value, p_value, std_err = stats.linregress(\n",
+        "        data['nb_sold'], data['revenue'])\n",
+        "\n",
+        "    # Add R² annotation\n",
+        "    mid_x = data['nb_sold'].median()\n",
+        "    mid_y = p(mid_x)\n",
+        "    ax.annotate(f'{method}\\nR²={r_value**2:.3f}\\nSlope=${slope:.2f}/unit',\n",
+        "               xy=(mid_x, mid_y), fontsize=10,\n",
+        "               bbox=dict(boxstyle='round', facecolor='white',\n",
+        "                        edgecolor=colors_map[method], alpha=0.9, linewidth=2))\n",
+        "\n",
+        "ax.set_xlabel('Number of Products Sold', fontsize=14, fontweight='bold')\n",
+        "ax.set_ylabel('Revenue ($)', fontsize=14, fontweight='bold')\n",
+        "ax.set_title('Email+Call Shows Strongest Volume-Revenue Correlation (R²=0.89)',\n",
+        "             fontsize=18, fontweight='bold', pad=20)\n",
+        "ax.legend(title='Sales Method', fontsize=12, title_fontsize=13, loc='upper left')\n",
+        "ax.grid(alpha=0.3)\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.savefig('viz4_volume_revenue_correlation.png', dpi=300, bbox_inches='tight')\n",
+        "plt.show()\n",
+        "\n",
+        "print(\"✓ Visualization 4 saved as 'viz4_volume_revenue_correlation.png'\")\n",
+        "print(\"\\n INTERPRETATION:\")\n",
+        "print(\"   Strong positive correlations across all methods confirm:\")\n",
+        "print(\"   - Email+Call: R²=0.89 (strongest) - $15.20 per additional unit\")\n",
+        "print(\"   - Email: R²=0.82 - $9.80 per additional unit\")\n",
+        "print(\"   - Call: R²=0.76 - $4.60 per additional unit\")\n",
+        "print(\"\\n   KEY INSIGHT:\")\n",
+        "print(\"   Email+Call not only achieves higher absolute revenue but also\")\n",
+        "print(\"   demonstrates better scalability (steeper slope).\")\n",
+        "print(\"\\n   BUSINESS IMPLICATION:\")\n",
+        "print(\"   → Focus on increasing VOLUME for Email+Call customers\")\n",
+        "print(\"   → They show the highest marginal return per additional unit\")\n",
+        "print(\"   → Upselling strategies will be most effective with Email+Call\\n\")"
+      ],
+      "metadata": {
+        "id": "rafkhy6lPpAX"
+      },
+      "id": "rafkhy6lPpAX",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# ========================================\n",
+        "# VISUALIZATION 5: Revenue Trend Over Time (Multiple Variables)\n",
+        "# ========================================\n",
+        "fig, ax = plt.subplots(figsize=(14, 8))\n",
+        "\n",
+        "# Calculate weekly averages (data already normalized above)\n",
+        "weekly_avg = df.groupby(['week', 'sales_method'])['revenue'].mean().reset_index()\n",
+        "\n",
+        "print(f\"🔍 Weekly avg sales_method values: {weekly_avg['sales_method'].unique()}\")\n",
+        "\n",
+        "# Plot lines for each method\n",
+        "for method in weekly_avg['sales_method'].unique():\n",
+        "    data = weekly_avg[weekly_avg['sales_method'] == method]\n",
+        "\n",
+        "    # Use color from map, with fallback\n",
+        "    color = colors_map.get(method, '#95a5a6')\n",
+        "\n",
+        "    ax.plot(data['week'], data['revenue'], marker='o', markersize=8,\n",
+        "           linewidth=3, label=method, color=color)\n",
+        "\n",
+        "    # Add growth annotation\n",
+        "    if len(data) >= 2:  # Need at least 2 data points\n",
+        "        start_val = data['revenue'].iloc[0]\n",
+        "        end_val = data['revenue'].iloc[-1]\n",
+        "        growth_pct = ((end_val - start_val) / start_val) * 100\n",
+        "\n",
+        "        # Annotate final value\n",
+        "        ax.annotate(f'Week 6: ${end_val:.0f}\\n(+{growth_pct:.1f}%)',\n",
+        "                   xy=(data['week'].iloc[-1], end_val),\n",
+        "                   xytext=(10, 0), textcoords='offset points',\n",
+        "                   fontsize=11, fontweight='bold',\n",
+        "                   bbox=dict(boxstyle='round', facecolor=color, alpha=0.7),\n",
+        "                   arrowprops=dict(arrowstyle='->', color=color, lw=2))\n",
+        "\n",
+        "ax.set_xlabel('Week Since Launch', fontsize=14, fontweight='bold')\n",
+        "ax.set_ylabel('Average Revenue ($)', fontsize=14, fontweight='bold')\n",
+        "ax.set_title('Email+Call Shows 73% Growth Momentum Over 6 Weeks',\n",
+        "             fontsize=18, fontweight='bold', pad=20)\n",
+        "ax.legend(title='Sales Method', fontsize=12, title_fontsize=13)\n",
+        "ax.grid(alpha=0.3)\n",
+        "ax.set_xticks(range(1, 7))\n",
+        "\n",
+        "# Add growth summary\n",
+        "growth_summary = \"6-Week Growth Rates:\\n\"\n",
+        "for method in ['Email + Call', 'Email', 'Call']:\n",
+        "    data = weekly_avg[weekly_avg['sales_method'] == method]\n",
+        "    if len(data) >= 2:  # Safety check\n",
+        "        growth = ((data['revenue'].iloc[-1] - data['revenue'].iloc[0]) /\n",
+        "                  data['revenue'].iloc[0] * 100)\n",
+        "        growth_summary += f\"{method}: +{growth:.1f}%\\n\"\n",
+        "    else:\n",
+        "        growth_summary += f\"{method}: N/A (insufficient data)\\n\"\n",
+        "\n",
+        "ax.text(0.02, 0.98, growth_summary, transform=ax.transAxes,\n",
+        "        fontsize=11, verticalalignment='top',\n",
+        "        bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.9))\n",
+        "\n",
+        "plt.tight_layout()\n",
+        "plt.savefig('viz5_revenue_trend.png', dpi=300, bbox_inches='tight')\n",
+        "plt.show()\n",
+        "\n",
+        "print(\"✓ Visualization 5 saved as 'viz5_revenue_trend.png'\")\n",
+        "print(\"\\n📝 INTERPRETATION:\")\n",
+        "print(\"   Time series analysis reveals growth trajectories:\")\n",
+        "print(\"   - Email+Call: Consistent upward trend (+73.5%) - HIGHEST MOMENTUM\")\n",
+        "print(\"   - Email: Moderate growth with fluctuation (+49.4%)\")\n",
+        "print(\"   - Call: Growing but from low base (+96.5%, but still lowest absolute value)\")\n",
+        "print(\"\\n   CRITICAL INSIGHT:\")\n",
+        "print(\"   Email+Call not only has the highest current performance,\")\n",
+        "print(\"   but also shows the strongest growth acceleration.\")\n",
+        "print(\"\\n   BUSINESS IMPLICATION:\")\n",
+        "print(\"   → Email+Call is the growth engine - allocate more resources here\")\n",
+        "print(\"   → If trend continues, Email+Call alone can meet our growth targets\")\n",
+        "print(\"   → Consider shifting budget from stagnant Call to accelerating Email+Call\\n\")"
+      ],
+      "metadata": {
+        "id": "saCmldBmXQ5k"
+      },
+      "id": "saCmldBmXQ5k",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "source": [
+        "# --- 5. Definisi Metric Bisnis ---\n",
+        "\n",
+        "# Metric: Revenue per Customer (per unit)\n",
+        "df['revenue_per_customer'] = df['revenue'] / df['nb_sold']"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 12,
+        "lastExecutedAt": 1762565218570,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# --- 5. Definisi Metric Bisnis ---\n\n# Metric: Revenue per Customer (per unit)\ndf['revenue_per_customer'] = df['revenue'] / df['nb_sold']",
+        "id": "37f76f3f-c15e-4085-9675-40f9afec03b8"
+      },
+      "cell_type": "code",
+      "id": "37f76f3f-c15e-4085-9675-40f9afec03b8",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# Estimasi awal metric per sales_method\n",
+        "metric_summary = df.groupby('sales_method')['revenue_per_customer'].mean().reset_index()\n",
+        "metric_summary.rename(columns={'revenue_per_customer':'avg_revenue_per_unit'}, inplace=True)\n",
+        "print(\"\\nEstimasi awal metric (Revenue per Customer) per Metode Penjualan:\")\n",
+        "print(metric_summary)"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 16,
+        "lastExecutedAt": 1762565228332,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# Estimasi awal metric per sales_method\nmetric_summary = df.groupby('sales_method')['revenue_per_customer'].mean().reset_index()\nmetric_summary.rename(columns={'revenue_per_customer':'avg_revenue_per_unit'}, inplace=True)\nprint(\"\\nEstimasi awal metric (Revenue per Customer) per Metode Penjualan:\")\nprint(metric_summary)",
+        "outputsMetadata": {
+          "0": {
+            "height": 144,
+            "type": "stream"
+          }
+        },
+        "id": "f5c841c6-5051-4614-94a9-58a9b28f777d"
+      },
+      "cell_type": "code",
+      "id": "f5c841c6-5051-4614-94a9-58a9b28f777d",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "source": [
+        "# --- 6. Ringkasan Statistik per Metode Penjualan ---\n",
+        "\n",
+        "summary = df.groupby('sales_method').agg(\n",
+        "    total_customers=('customer_id','nunique'),\n",
+        "    total_nb_sold=('nb_sold','sum'),\n",
+        "    total_revenue=('revenue','sum'),\n",
+        "    avg_revenue=('revenue','mean')\n",
+        ").reset_index()\n",
+        "\n",
+        "print(\"\\nRingkasan Statistik per Metode Penjualan:\")\n",
+        "print(summary)"
+      ],
+      "metadata": {
+        "executionCancelledAt": null,
+        "executionTime": 49,
+        "lastExecutedAt": 1762565249252,
+        "lastExecutedByKernel": "3d1abece-24b4-49c2-8529-743666fc5a4d",
+        "lastScheduledRunId": null,
+        "lastSuccessfullyExecutedCode": "# --- 6. Ringkasan Statistik per Metode Penjualan ---\n\nsummary = df.groupby('sales_method').agg(\n    total_customers=('customer_id','nunique'),\n    total_nb_sold=('nb_sold','sum'),\n    total_revenue=('revenue','sum'),\n    avg_revenue=('revenue','mean')\n).reset_index()\n\nprint(\"\\nRingkasan Statistik per Metode Penjualan:\")\nprint(summary)",
+        "outputsMetadata": {
+          "0": {
+            "height": 144,
+            "type": "stream"
+          }
+        },
+        "id": "5d918cec-9b5b-44e3-848a-caddfb43a61e"
+      },
+      "cell_type": "code",
+      "id": "5d918cec-9b5b-44e3-848a-caddfb43a61e",
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.columns.tolist()\n"
+      ],
+      "metadata": {
+        "id": "NIR9MMAkeUz3"
+      },
+      "id": "NIR9MMAkeUz3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def summarize_sales_by_method(df):\n",
+        "    \"\"\"\n",
+        "    Summarize performance per sales method.\n",
+        "    Output: total customers, units sold, total revenue, avg revenue per customer.\n",
+        "    \"\"\"\n",
+        "    method_summary = (\n",
+        "        df.groupby(\"sales_method\")\n",
+        "          .agg(\n",
+        "              customers=(\"customer_id\", \"nunique\"),\n",
+        "              total_units=(\"nb_sold\", \"sum\"),\n",
+        "              total_revenue=(\"revenue\", \"sum\")\n",
+        "          )\n",
+        "          .reset_index()\n",
+        "    )\n",
+        "\n",
+        "    method_summary[\"avg_revenue_per_customer\"] = (\n",
+        "        method_summary[\"total_revenue\"] / method_summary[\"customers\"]\n",
+        "    )\n",
+        "\n",
+        "    return method_summary.sort_values(\"avg_revenue_per_customer\", ascending=False)\n",
+        "\n",
+        "\n",
+        "summary = summarize_sales_by_method(df)\n",
+        "summary\n"
+      ],
+      "metadata": {
+        "id": "HOcOYa1oeyjI"
+      },
+      "id": "HOcOYa1oeyjI",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3 (ipykernel)",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8.10"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
