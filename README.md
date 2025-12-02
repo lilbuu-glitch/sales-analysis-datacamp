@@ -34,7 +34,7 @@ The **Email + Call** hybrid method is the strongest performer across all major b
 
 Revenue shows a **bimodal distribution**, indicating two customer value segments. This supports targeted marketing and differentiated pricing strategies.
 
-![Revenue Distribution Plot](Image/viz1_revenue_distribution.png)
+![Revenue Distribution Plot](image/viz1_revenue_distribution.png) 
 
 ---
 
